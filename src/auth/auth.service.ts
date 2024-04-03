@@ -57,7 +57,7 @@ export class AuthService {
         return tokens
     }
 
-    async signout(userId: string) {
+    async signout(userId: string): Promise<boolean> {
         await this.prismaService.user.updateMany({
             where: {
                 id: userId,
@@ -69,6 +69,8 @@ export class AuthService {
                 hashedRt: null,
             },
         })
+
+        return true
     }
 
     async refreshToken(userId: string, refreshToken: string): Promise<Tokens> {
@@ -77,9 +79,10 @@ export class AuthService {
                 id: userId,
             },
         })
-        if (!user) throw new ForbiddenException('Access Denied')
+        if (!user || !user.hashedRt)
+            throw new ForbiddenException('Access Denied')
 
-        const rtMatches = await bcrypt.compare(refreshToken, user.hashedRt)
+        const rtMatches = await bcrypt.compare(user.hashedRt, refreshToken)
         if (!rtMatches) throw new ForbiddenException('Access Denied')
 
         const tokens = await this.getTokens(user.id, user.email)
