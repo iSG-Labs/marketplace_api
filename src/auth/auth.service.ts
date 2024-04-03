@@ -39,7 +39,23 @@ export class AuthService {
         return tokens
     }
 
-    signinLocal() {}
+    async signinLocal(dto: AuthDto): Promise<Tokens> {
+        const user = await this.prismaService.user.findUnique({
+            where: {
+                email: dto.email,
+            },
+        })
+
+        if (!user) throw new ForbiddenException('Access Denied')
+
+        const passwordMatches = await bcrypt.compare(dto.password, user.hash)
+        if (!passwordMatches) throw new ForbiddenException('Access Denied')
+
+        const tokens = await this.getTokens(user.id, user.email)
+        await this.updateRtHash(user.id, tokens.refreshToken)
+
+        return tokens
+    }
 
     signout() {}
 
