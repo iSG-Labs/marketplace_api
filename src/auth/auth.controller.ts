@@ -1,4 +1,14 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common'
+import {
+    Body,
+    Controller,
+    HttpCode,
+    HttpStatus,
+    Post,
+    Req,
+    UseGuards,
+} from '@nestjs/common'
+import { Request } from 'express'
+import { AuthGuard } from '@nestjs/passport'
 import { AuthService } from './auth.service'
 import { AuthDto } from './dto'
 import { Tokens } from './types'
@@ -19,13 +29,18 @@ export class AuthController {
         return this.authService.signinLocal(dto)
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Post('signout')
-    signout() {
-        this.authService.signout()
+    @HttpCode(HttpStatus.OK)
+    signout(@Req() req: Request) {
+        const user = req.user
+        return this.authService.signout(user['sub'])
     }
 
+    @UseGuards(AuthGuard('jwt-refresh'))
     @Post('refresh')
+    @HttpCode(HttpStatus.OK)
     refreshToken() {
-        this.authService.refreshToken()
+        // this.authService.refreshToken()
     }
 }
