@@ -4,6 +4,8 @@
 
 ```bash
 $ yarn install
+$ npx husky init
+$ node --eval "fs.writeFileSync('.husky/pre-commit','npx lint-staged\n')"
 ```
 
 ## Running the app
