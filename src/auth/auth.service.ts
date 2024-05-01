@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { AuthDto } from './dto'
-import { Tokens } from './types'
+import { Tokens, User } from './types'
 
 @Injectable()
 export class AuthService {
@@ -39,7 +39,7 @@ export class AuthService {
         return tokens
     }
 
-    async signinLocal(dto: AuthDto): Promise<Tokens> {
+    async signinLocal(dto: AuthDto): Promise<User> {
         const user = await this.prismaService.user.findUnique({
             where: {
                 email: dto.email,
@@ -54,7 +54,12 @@ export class AuthService {
         const tokens = await this.getTokens(user.id, user.email)
         await this.updateRtHash(user.id, tokens.refreshToken)
 
-        return tokens
+        return {
+            id: user.id,
+            name: user.email,
+            email: user.email,
+            token: tokens,
+        }
     }
 
     async signout(userId: string): Promise<boolean> {
