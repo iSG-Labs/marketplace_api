@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { AuthDto } from './dto'
+import { AuthDto, SignupAuthDto } from './dto'
 import { Tokens, User } from './types'
 
 @Injectable()
@@ -15,12 +15,14 @@ export class AuthService {
         private configService: ConfigService,
     ) {}
 
-    async signupLocal(dto: AuthDto): Promise<Tokens> {
+    async signupLocal(dto: SignupAuthDto): Promise<Tokens> {
         const hash = await this.hashData(dto.password)
         const user = await this.prismaService.user
             .create({
                 data: {
                     email: dto.email,
+                    firstname: dto.firstname,
+                    lastname: dto.lastname,
                     hash,
                 },
             })
