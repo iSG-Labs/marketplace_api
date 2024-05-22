@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common'
+import {
+    Body,
+    Controller,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Post,
+} from '@nestjs/common'
 import { ProductDto } from 'src/auth/dto'
 // import { Public } from 'src/common/decorators'
 import { ProductService } from './product.service'
@@ -10,7 +17,13 @@ export class ProductController {
 
     @Post('create')
     @HttpCode(HttpStatus.CREATED)
-    signupLocal(@Body() dto: ProductDto): Promise<Product> {
-        return this.productService.createProductLocal(dto)
+    createProduct(@Body() dto: ProductDto): Promise<Product> {
+        return this.productService.createProduct(dto)
+    }
+
+    @Get('all')
+    @HttpCode(HttpStatus.CREATED)
+    viewProducts(): Promise<Array<Product>> {
+        return this.productService.getAllProducts()
     }
 }

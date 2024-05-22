@@ -21,8 +21,14 @@ export class AuthService {
             .create({
                 data: {
                     email: dto.email,
-                    firstname: dto.firstname,
-                    lastname: dto.lastname,
+                    phone: dto.phone,
+                    profile: {
+                        firstName: dto.firstName,
+                        lastName: dto.lastName,
+                        address: dto.address,
+                        bio: '',
+                        avatarUrl: '',
+                    },
                     hash,
                 },
             })

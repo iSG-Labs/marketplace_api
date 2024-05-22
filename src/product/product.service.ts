@@ -8,7 +8,7 @@ import { Product } from './types/'
 export class ProductService {
     constructor(private prismaService: PrismaService) {}
 
-    async createProductLocal(dto: ProductDto): Promise<Product> {
+    async createProduct(dto: ProductDto): Promise<Product> {
         const product = await this.prismaService.product
             .create({
                 data: {
@@ -32,5 +32,16 @@ export class ProductService {
             description: product.description,
             photo: product.photo,
         }
+    }
+
+    async getAllProducts(): Promise<Array<Product>> {
+        const products = await this.prismaService.product.findMany()
+
+        return products.map((product) => ({
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            photo: product.photo,
+        }))
     }
 }

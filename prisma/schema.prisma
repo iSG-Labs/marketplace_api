@@ -56,9 +56,9 @@ model Bids {
 }
 
 type Profile {
-    firstName String
-    lastName  String
-    avatarUrl String
-    bio       String
-    address  String
+    firstName   String
+    lastName    String
+    avatarUrl   String?
+    bio         String?
+    address     String
 }
