@@ -60,5 +60,5 @@ type Profile {
     lastName  String
     avatarUrl String
     bio       String
-    location  String
+    address  String
 }
