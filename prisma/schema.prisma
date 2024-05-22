@@ -14,25 +14,51 @@ datasource db {
 }
 
 model User {
-    id          String      @id @default(auto()) @map("_id") @db.ObjectId
-    email       String      @unique
-    firstname   String
-    lastname    String
-    hash        String
-    hashedRt    String?
-    createdAt   DateTime    @default(now())
-    updatedAt   DateTime    @updatedAt
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    email     String   @unique
+    phone     String   @unique
+    profile   Profile?
+    hash      String
+    hashedRt  String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     @@map("users")
 }
 
 model Product {
-    id          String      @id @default(auto()) @map("_id") @db.ObjectId
-    name        String
-    description String
-    photo       String
-    createdAt   DateTime    @default(now())
-    updatedAt   DateTime    @updatedAt
+    id             String   @id @default(auto()) @map("_id") @db.ObjectId
+    name           String
+    description    String
+    photo          String
+    sellerId       String   @db.ObjectId
+    startingPrice  Float    @default(1000.0)
+    currentPrice   Float    @default(1000.0)
+    auctionEndTime DateTime @default(now())
+    status         String
+    bids           Bids[]
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
 
     @@map("products")
+}
+
+model Bids {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    productId String   @db.ObjectId
+    bidderId  String   @db.ObjectId
+    amount    Float    @default(0.0)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    Product   Product  @relation(fields: [productId], references: [id])
+
+    @@map("bids")
+}
+
+type Profile {
+    firstName String
+    lastName  String
+    avatarUrl String
+    bio       String
+    location  String
 }
