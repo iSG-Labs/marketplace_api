@@ -15,15 +15,15 @@ import { Product } from './types/'
 export class ProductController {
     constructor(private readonly productService: ProductService) {}
 
-    @Post('create')
-    @HttpCode(HttpStatus.CREATED)
-    createProduct(@Body() dto: ProductDto): Promise<Product> {
-        return this.productService.createProduct(dto)
-    }
+    // @Post('create')
+    // @HttpCode(HttpStatus.CREATED)
+    // createProduct(@Body() dto: ProductDto): Promise<Product> {
+    //     return this.productService.createProduct(dto)
+    // }
 
-    @Get('all')
-    @HttpCode(HttpStatus.CREATED)
-    viewProducts(): Promise<Array<Product>> {
-        return this.productService.getAllProducts()
-    }
+    // @Get('all')
+    // @HttpCode(HttpStatus.CREATED)
+    // viewProducts(): Promise<Array<Product>> {
+    //     return this.productService.getAllProducts()
+    // }
 }
