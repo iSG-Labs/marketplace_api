@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module'
 import { AtGuard } from './common/guards'
 import { ProductModule } from './product/product.module'
 import { UserModule } from './user/user.module'
+import { AuctionModule } from './auction/auction.module'
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { UserModule } from './user/user.module'
         AuthModule,
         ProductModule,
         UserModule,
+        AuctionModule,
     ],
     providers: [
         {
