@@ -12,4 +12,12 @@ export class ProductDto {
     @IsNotEmpty()
     @IsString()
     photo: string
+
+    @IsNotEmpty()
+    @IsString()
+    location: string
+
+    @IsNotEmpty()
+    @IsString()
+    auctionId: string
 }

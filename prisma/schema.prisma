@@ -40,10 +40,11 @@ model Product {
     id              String   @id @default(auto()) @map("_id") @db.ObjectId
     name            String
     description     String
-    photo           String
+    photo           String?
+    location        String
     sellerId        String   @db.ObjectId
-    startingBid     Float    @default(1000.0)
-    currentBid      Float    @default(1000.0)
+    startingBid     Float?    @default(1000.0)
+    currentBid      Float?    @default(1000.0)
     status          String
     auctionId       String   @db.ObjectId
     auction         Auction  @relation(fields: [auctionId], references: [id])

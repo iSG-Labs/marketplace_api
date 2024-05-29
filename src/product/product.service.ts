@@ -8,40 +8,36 @@ import { Product } from './types/'
 export class ProductService {
     constructor(private prismaService: PrismaService) {}
 
-    // async createProduct(dto: ProductDto): Promise<Product> {
-    //     const product = await this.prismaService.product
-    //         .create({
-    //             data: {
-    //                 name: dto.name,
-    //                 description: dto.description,
-    //                 photo: dto.photo,
-    //             },
-    //         })
-    //         .catch((error) => {
-    //             if (error instanceof PrismaClientKnownRequestError) {
-    //                 if (error.code === 'P2002') {
-    //                     throw new ForbiddenException('Product already exists.')
-    //                 }
-    //             }
-    //             throw error
-    //         })
+    async createProduct(userId: string, dto: ProductDto): Promise<Product> {
+        const product = await this.prismaService.product
+            .create({
+                data: {
+                    name: dto.name,
+                    description: dto.description,
+                    photo: dto.photo,
+                    location: dto.location,
+                    sellerId: userId,
+                    status: 'online',
+                    auction: {
+                        connect: {
+                            id: dto.auctionId,
+                        },
+                    },
+                },
+            })
+            .catch((error) => {
+                if (error instanceof PrismaClientKnownRequestError) {
+                    if (error.code === 'P2002') {
+                        throw new ForbiddenException('Product already exists.')
+                    }
+                }
+                throw error
+            })
 
-    //     return {
-    //         id: product.id,
-    //         name: product.name,
-    //         description: product.description,
-    //         photo: product.photo,
-    //     }
-    // }
+        return product
+    }
 
-    // async getAllProducts(): Promise<Array<Product>> {
-    //     const products = await this.prismaService.product.findMany()
-
-    //     return products.map((product) => ({
-    //         id: product.id,
-    //         name: product.name,
-    //         description: product.description,
-    //         photo: product.photo,
-    //     }))
-    // }
+    async getAllProducts(): Promise<Array<Product>> {
+        return await this.prismaService.product.findMany()
+    }
 }
