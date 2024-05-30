@@ -42,4 +42,9 @@ export class AuctionController {
     remove(@Param('id') id: string) {
         return this.auctionService.remove(id)
     }
+
+    @Get('products/:id')
+    findAllAuctionProducts(@Param('id') id: string) {
+        return this.auctionService.getAllProducts(id)
+    }
 }

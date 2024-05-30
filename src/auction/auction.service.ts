@@ -89,6 +89,18 @@ export class AuctionService {
         return deletedAuction
     }
 
+    async getAllProducts(auctionId: string) {
+        return await this.prismaService.product
+            .findMany({
+                where: {
+                    auctionId: auctionId,
+                },
+            })
+            .catch((error) => {
+                throw error
+            })
+    }
+
     getAuctionTimes(): AuctionTimes {
         const timeZone = 'America/Denver' // MST timezone
         let now = moment.tz(timeZone)
