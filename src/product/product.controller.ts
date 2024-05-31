@@ -4,6 +4,7 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Param,
     Post,
 } from '@nestjs/common'
 import { ProductDto } from 'src/auth/dto'
@@ -28,5 +29,14 @@ export class ProductController {
     @HttpCode(HttpStatus.CREATED)
     viewProducts(): Promise<Array<Product>> {
         return this.productService.getAllProducts()
+    }
+
+    @Post('bid/:id')
+    @HttpCode(HttpStatus.OK)
+    bid(
+        @GetCurrentUserId() userId: string,
+        @Param('id') productId: string,
+    ): Promise<Boolean> {
+        return this.productService.bid(userId, productId)
     }
 }
