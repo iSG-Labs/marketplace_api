@@ -17,7 +17,7 @@ export class ProductService {
                     photo: dto.photo,
                     location: dto.location,
                     sellerId: userId,
-                    status: 'online',
+                    status: 'Unsold',
                     auction: {
                         connect: {
                             id: dto.auctionId,
