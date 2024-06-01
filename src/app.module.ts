@@ -7,6 +7,7 @@ import { AtGuard } from './common/guards'
 import { ProductModule } from './product/product.module'
 import { UserModule } from './user/user.module'
 import { AuctionModule } from './auction/auction.module'
+import { TasksModule } from './tasks/tasks.module'
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { AuctionModule } from './auction/auction.module'
         ProductModule,
         UserModule,
         AuctionModule,
+        TasksModule,
     ],
     providers: [
         {
