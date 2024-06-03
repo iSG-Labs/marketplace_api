@@ -7,7 +7,7 @@ import {
     Param,
     Post,
 } from '@nestjs/common'
-import { ProductDto } from 'src/auth/dto'
+import { ProductDto, SpeedUpBidDto } from './dto'
 import { GetCurrentUserId } from 'src/common/decorators'
 import { ProductService } from './product.service'
 import { Product } from './types/'
@@ -38,5 +38,15 @@ export class ProductController {
         @Param('id') productId: string,
     ): Promise<Boolean> {
         return this.productService.bid(userId, productId)
+    }
+
+    @Post('bid/speed_up_bid/:id')
+    @HttpCode(HttpStatus.OK)
+    speedUpBid(
+        @GetCurrentUserId() userId: string,
+        @Param('id') productId: string,
+        @Body() dto: SpeedUpBidDto,
+    ): Promise<Boolean> {
+        return this.productService.speedUpBid(userId, productId, dto)
     }
 }

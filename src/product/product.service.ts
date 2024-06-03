@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { ProductDto } from 'src/auth/dto'
+import { ProductDto, SpeedUpBidDto } from './dto'
 import { Product } from './types/'
 
 @Injectable()
@@ -41,6 +41,24 @@ export class ProductService {
         return await this.prismaService.product.findMany()
     }
 
+    async speedUpBid(
+        userId: string,
+        productId: string,
+        dto: SpeedUpBidDto,
+    ): Promise<Boolean> {
+        await this.prismaService.bid.updateMany({
+            where: {
+                userId: userId,
+                productId: productId,
+            },
+            data: {
+                increment_amount: dto.amount,
+            },
+        })
+
+        return true
+    }
+
     async bid(userId: string, productId: string): Promise<Boolean> {
         const current_bid = await this.getCurrentBidOfProduct(productId)
         const bid_amount = current_bid + 250
@@ -68,7 +86,7 @@ export class ProductService {
                     productId: productId,
                 },
                 data: {
-                    amount: bid_amount,
+                    amount: current_bid + bid.increment_amount,
                 },
             })
         } else {

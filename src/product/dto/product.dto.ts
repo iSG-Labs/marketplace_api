@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator'
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator'
 
 export class ProductDto {
     @IsNotEmpty()
@@ -20,4 +20,10 @@ export class ProductDto {
     @IsNotEmpty()
     @IsString()
     auctionId: string
+}
+
+export class SpeedUpBidDto {
+    @IsNotEmpty()
+    @IsNumber()
+    amount: number
 }
