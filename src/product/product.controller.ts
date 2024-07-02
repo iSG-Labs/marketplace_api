@@ -1,12 +1,18 @@
 import {
     Body,
     Controller,
+    FileTypeValidator,
     Get,
     HttpCode,
     HttpStatus,
+    MaxFileSizeValidator,
     Param,
+    ParseFilePipe,
     Post,
+    UploadedFile,
+    UseInterceptors,
 } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
 import { ProductDto, SpeedUpBidDto } from './dto'
 import { GetCurrentUserId } from 'src/common/decorators'
 import { ProductService } from './product.service'
@@ -18,11 +24,21 @@ export class ProductController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
+    @UseInterceptors(FileInterceptor('photo'))
     createProduct(
         @GetCurrentUserId() userId: string,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new MaxFileSizeValidator({ maxSize: 7000 }),
+                    new FileTypeValidator({ fileType: 'image/jpeg' }),
+                ],
+            }),
+        )
+        photo: Express.Multer.File,
         @Body() dto: ProductDto,
     ): Promise<Product> {
-        return this.productService.createProduct(userId, dto)
+        return this.productService.createProduct(userId, photo, dto)
     }
 
     @Get('all')
