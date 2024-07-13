@@ -16,7 +16,7 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { ProductDto, SpeedUpBidDto } from './dto'
 import { GetCurrentUserId } from 'src/common/decorators'
 import { ProductService } from './product.service'
-import { Product } from './types/'
+import { Product, TopBidder } from './types/'
 
 @Controller('product')
 export class ProductController {
@@ -47,6 +47,11 @@ export class ProductController {
         return this.productService.getAllProducts()
     }
 
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.productService.findOne(id)
+    }
+
     @Post('bid/:id')
     @HttpCode(HttpStatus.OK)
     bid(
@@ -54,6 +59,12 @@ export class ProductController {
         @Param('id') productId: string,
     ): Promise<Boolean> {
         return this.productService.bid(userId, productId)
+    }
+
+    @Get('winner/:id')
+    @HttpCode(HttpStatus.OK)
+    getWinner(@Param('id') productId: string): Promise<TopBidder> {
+        return this.productService.getWinner(productId)
     }
 
     @Post('bid/speed_up_bid/:id')

@@ -4,7 +4,7 @@ import { UploadApiResponse, v2 as cloudinary } from 'cloudinary'
 import { v4 as uuidv4 } from 'uuid'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { ProductDto, SpeedUpBidDto } from './dto'
-import { Product } from './types/'
+import { Product, TopBidder } from './types/'
 import { ConfigService } from '@nestjs/config'
 
 @Injectable()
@@ -52,6 +52,18 @@ export class ProductService {
 
     async getAllProducts(): Promise<Array<Product>> {
         return await this.prismaService.product.findMany()
+    }
+
+    async findOne(productId: string) {
+        return await this.prismaService.product
+            .findFirst({
+                where: {
+                    id: productId,
+                },
+            })
+            .catch((error) => {
+                throw error
+            })
     }
 
     async speedUpBid(
@@ -121,6 +133,27 @@ export class ProductService {
         }
         await this.updateProductCurrentBid(productId, bid_amount)
         return true
+    }
+
+    async getWinner(productId: string): Promise<TopBidder> {
+        const topBid = await this.prismaService.bid.findFirst({
+            where: {
+                productId: productId,
+                isWinner: true,
+            },
+        })
+
+        const winner = await this.prismaService.user.findFirst({
+            where: {
+                id: topBid.userId,
+            },
+        })
+
+        return {
+            id: winner.id,
+            profile: winner.profile,
+            email: winner.email,
+        }
     }
 
     async updateProductCurrentBid(
