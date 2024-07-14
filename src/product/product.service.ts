@@ -136,12 +136,32 @@ export class ProductService {
     }
 
     async getWinner(productId: string): Promise<TopBidder> {
-        const topBid = await this.prismaService.bid.findFirst({
-            where: {
-                productId: productId,
-                isWinner: true,
-            },
-        })
+        const topBid = await this.prismaService.bid
+            .findFirstOrThrow({
+                where: {
+                    productId: productId,
+                    isWinner: true,
+                },
+            })
+            .catch(async (error) => {
+                if (error instanceof PrismaClientKnownRequestError) {
+                    if (error.code !== 'P2025') {
+                        throw new ForbiddenException('No bid found')
+                    }
+                }
+            })
+
+        if (!topBid)
+            return {
+                id: '',
+                email: '',
+                profile: {
+                    firstName: '',
+                    lastName: '',
+                    address: '',
+                    avatarUrl: '',
+                },
+            }
 
         const winner = await this.prismaService.user.findFirst({
             where: {
