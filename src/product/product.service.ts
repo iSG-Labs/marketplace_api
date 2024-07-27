@@ -88,6 +88,20 @@ export class ProductService {
         const current_bid = await this.getCurrentBidOfProduct(productId)
         const bid_amount = current_bid + 250
 
+        // check if auction closed or not
+        const product = await this.prismaService.product.findFirst({
+            where: {
+                id: productId,
+                auction: {
+                    status: 'Ongoing',
+                },
+            },
+        })
+
+        if (!product) {
+            throw new ForbiddenException('Auction ended')
+        }
+
         const bid = await this.prismaService.bid
             .findFirstOrThrow({
                 where: {
